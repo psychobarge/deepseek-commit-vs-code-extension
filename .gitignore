@@ -1,0 +1,9 @@
+node_modules/
+out/
+.vscode-test/
+*.vsix
+*.log
+.DS_Store
+
+.env
+.pi/worklogs

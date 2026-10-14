@@ -1,0 +1,125 @@
+{
+  "name": "deepseek-commit",
+  "displayName": "DeepSeek Commit",
+  "description": "Generate Git commit messages from your staged or unstaged changes with DeepSeek.",
+  "version": "0.0.1",
+  "publisher": "psychobarge",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "AI",
+    "SCM Providers"
+  ],
+  "keywords": [
+    "deepseek",
+    "git",
+    "commit message",
+    "ai"
+  ],
+  "activationEvents": [
+    "onCommand:deepseekCommit.generateCommitMessage",
+    "onCommand:deepseekCommit.openSettings"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "deepseekCommit.generateCommitMessage",
+        "title": "DeepSeek Commit: Generate Commit Message",
+        "category": "DeepSeek Commit",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "deepseekCommit.openSettings",
+        "title": "DeepSeek Commit: Open Settings",
+        "category": "DeepSeek Commit"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "deepseekCommit.generateCommitMessage",
+          "group": "navigation",
+          "when": "scmProvider == git && config.deepseekCommit.commitMessage.enabled"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DeepSeek Commit",
+      "properties": {
+        "deepseekCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepSeek API key used as a Bearer token for chat requests.",
+          "scope": "application"
+        },
+        "deepseekCommit.baseUrl": {
+          "type": "string",
+          "default": "https://api.deepseek.com/beta",
+          "description": "DeepSeek beta API base URL. The extension appends /chat/completions."
+        },
+        "deepseekCommit.model": {
+          "type": "string",
+          "default": "deepseek-v4-flash",
+          "description": "DeepSeek chat model used to write commit messages."
+        },
+        "deepseekCommit.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Sampling temperature for commit messages."
+        },
+        "deepseekCommit.timeoutMs": {
+          "type": "number",
+          "default": 15000,
+          "minimum": 1000,
+          "maximum": 120000,
+          "description": "HTTP timeout for DeepSeek requests, in milliseconds."
+        },
+        "deepseekCommit.commitMessage.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the commit message button in the Source Control view toolbar and allow commit message generation."
+        },
+        "deepseekCommit.commitMessage.maxDiffChars": {
+          "type": "number",
+          "default": 12000,
+          "minimum": 500,
+          "maximum": 200000,
+          "description": "Maximum number of diff characters sent to DeepSeek when generating a commit message."
+        },
+        "deepseekCommit.commitMessage.maxTokens": {
+          "type": "number",
+          "default": 400,
+          "minimum": 32,
+          "maximum": 4096,
+          "description": "Maximum number of tokens to request for a generated commit message."
+        },
+        "deepseekCommit.commitMessage.instructions": {
+          "type": "string",
+          "default": "",
+          "description": "Extra instructions for commit message generation, for example the language or format to use."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "npm run compile && vsce package --no-dependencies",
+    "publish:vsce": "node scripts/publish-vsce.mjs",
+    "publish:vsce:dry": "node scripts/publish-vsce.mjs --dry-run"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/vscode": "^1.86.0",
+    "@vscode/vsce": "^3.9.2",
+    "dotenv": "^17.4.2",
+    "typescript": "^5.8.3"
+  }
+}
