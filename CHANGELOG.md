@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Fixed `LICENSE`: Most of the code comes from Simon Liang.adds this fork's own developper copyright.
+
 ## 0.0.3
 
 - Fixed the Source Control progress spinner that kept spinning forever when generation failed; the error is now shown once the progress ends.
