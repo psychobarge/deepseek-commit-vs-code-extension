@@ -66,13 +66,6 @@
           "default": "deepseek-v4-flash",
           "description": "DeepSeek chat model used to write commit messages."
         },
-        "deepseekCommit.temperature": {
-          "type": "number",
-          "default": 0.2,
-          "minimum": 0,
-          "maximum": 2,
-          "description": "Sampling temperature for commit messages."
-        },
         "deepseekCommit.timeoutMs": {
           "type": "number",
           "default": 15000,
@@ -94,7 +87,7 @@
         },
         "deepseekCommit.commitMessage.maxTokens": {
           "type": "number",
-          "default": 400,
+          "default": 1000,
           "minimum": 32,
           "maximum": 4096,
           "description": "Maximum number of tokens to request for a generated commit message."

@@ -16,7 +16,7 @@ export interface DeepSeekChatRequestBody {
   model: string;
   messages: ChatMessage[];
   max_tokens: number;
-  temperature: number;
+  thinking: { type: "enabled" | "disabled" };
   stream: false;
 }
 
@@ -90,13 +90,14 @@ export function buildCommitMessageRequestBody(
   messages: ChatMessage[],
   model: string,
   maxTokens: number,
-  temperature: number,
 ): DeepSeekChatRequestBody {
   return {
     model,
     messages,
     max_tokens: maxTokens,
-    temperature,
+    // Reasoning tokens are billed as output and share max_tokens with the message, while DeepSeek
+    // defaults to the highest thinking effort. Disabled: no truncated or empty commit messages.
+    thinking: { type: "disabled" },
     stream: false,
   };
 }

@@ -13,7 +13,6 @@ export interface CommitMessageClientOptions {
   baseUrl: string;
   model: string;
   maxTokens: number;
-  temperature: number;
   timeoutMs: number;
   context: CommitMessageContext;
 }
@@ -33,7 +32,6 @@ export async function requestCommitMessage(
       buildCommitMessageMessages(options.context),
       options.model,
       options.maxTokens,
-      options.temperature,
     ),
     abortSignal,
     fetchImplementation,

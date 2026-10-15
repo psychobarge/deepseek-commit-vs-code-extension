@@ -51,9 +51,9 @@ export async function generateCommitMessage(dependencies: CommitMessageCommandDe
     return;
   }
 
-  await vscode.window.withProgress(
+  const generationError = await vscode.window.withProgress(
     { location: vscode.ProgressLocation.SourceControl, title: "Generating commit message", cancellable: true },
-    async (_progress, token) => {
+    async (_progress, token): Promise<string | undefined> => {
       const abortController = new AbortController();
       const cancellation = token.onCancellationRequested(() => abortController.abort());
 
@@ -65,7 +65,6 @@ export async function generateCommitMessage(dependencies: CommitMessageCommandDe
             baseUrl: settings.baseUrl,
             model: settings.model,
             maxTokens: settings.commitMessage.maxTokens,
-            temperature: settings.temperature,
             timeoutMs: settings.timeoutMs,
             context: {
               diff: truncateDiff(changeSet.diff, settings.commitMessage.maxDiffChars),
@@ -83,15 +82,21 @@ export async function generateCommitMessage(dependencies: CommitMessageCommandDe
       } catch (error) {
         if (!token.isCancellationRequested) {
           console.error("DeepSeek Commit commit message generation failed", error);
-          await vscode.window.showErrorMessage(
-            `DeepSeek Commit commit message generation failed: ${readErrorMessage(error)}`,
-          );
+          return `DeepSeek Commit commit message generation failed: ${readErrorMessage(error)}`;
         }
       } finally {
         cancellation.dispose();
       }
+
+      return undefined;
     },
   );
+
+  // Shown outside withProgress: that thenable only resolves once the notification is dismissed,
+  // which would otherwise leave the Source Control progress spinner spinning forever.
+  if (generationError) {
+    await vscode.window.showErrorMessage(generationError);
+  }
 }
 
 async function resolveRepositoryFromWorkspace(): Promise<GitRepository | undefined> {

@@ -12,7 +12,7 @@ https://github.com/lhr0909/deepseek-fim-autocomplete-vscode-extension by Simon L
 - A button inside the commit message box is not possible: VS Code only exposes that spot through the proposed `contribSourceControlInputBoxMenu` API, which cannot be used by a published extension.
 - Uses the staged diff, and falls back to the working tree diff (with the list of untracked files) when nothing is staged.
 - Never overwrites a commit message you already typed.
-- Simple JSON settings for API key, model, base URL, temperature, timeout, diff size and extra instructions.
+- Simple JSON settings for API key, model, base URL, timeout, diff size and extra instructions.
 - Unit tests for the core request/config/message logic.
 
 ## Settings
@@ -24,12 +24,13 @@ Add these to your VS Code `settings.json`:
   "deepseekCommit.apiKey": "YOUR_DEEPSEEK_API_KEY",
   "deepseekCommit.model": "deepseek-v4-flash",
   "deepseekCommit.baseUrl": "https://api.deepseek.com/beta",
-  "deepseekCommit.temperature": 0.2,
   "deepseekCommit.commitMessage.instructions": "Be concise and precise."
 }
 ```
 
-`deepseekCommit.commitMessage.maxDiffChars` (default `12000`) truncates large diffs before they are sent, and `deepseekCommit.commitMessage.maxTokens` (default `400`) caps the generated message.
+`deepseekCommit.commitMessage.maxDiffChars` (default `12000`) truncates large diffs before they are sent, and `deepseekCommit.commitMessage.maxTokens` (default `1000`) caps the generated message.
+
+Temperature is not configurable: DeepSeek's thinking models ignore it. The extension sends `thinking: { type: "disabled" }` so reasoning tokens cannot eat the message budget.
 
 ## Generate a commit message
 

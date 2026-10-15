@@ -20,7 +20,6 @@ test("readDeepSeekCommitSettings reads configured values", () => {
       apiKey: "  sk-test  ",
       baseUrl: "https://example.test/beta/",
       model: "custom-chat-model",
-      temperature: 0.4,
       timeoutMs: 3000,
       "commitMessage.enabled": false,
       "commitMessage.maxDiffChars": 5000,
@@ -33,7 +32,6 @@ test("readDeepSeekCommitSettings reads configured values", () => {
     apiKey: "sk-test",
     baseUrl: "https://example.test/beta/",
     model: "custom-chat-model",
-    temperature: 0.4,
     timeoutMs: 3000,
     commitMessage: {
       enabled: false,

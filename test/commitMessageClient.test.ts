@@ -8,7 +8,6 @@ const baseOptions: CommitMessageClientOptions = {
   baseUrl: "https://api.deepseek.com/beta/",
   model: "deepseek-v4-flash",
   maxTokens: 400,
-  temperature: 0.2,
   timeoutMs: 15000,
   context: {
     diff: "diff --git a/src/a.ts b/src/a.ts\n+const a = 1;",
@@ -41,7 +40,7 @@ test("requestCommitMessage posts a chat request and returns a cleaned message", 
   const body = JSON.parse(calls[0].init.body as string);
   assert.equal(body.model, "deepseek-v4-flash");
   assert.equal(body.max_tokens, 400);
-  assert.equal(body.temperature, 0.2);
+  assert.deepEqual(body.thinking, { type: "disabled" });
   assert.equal(body.stream, false);
   assert.equal(body.messages.length, 2);
   assert.match(body.messages[1].content, /const a = 1/);

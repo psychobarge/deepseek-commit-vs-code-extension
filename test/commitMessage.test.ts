@@ -78,13 +78,16 @@ test("buildCommitMessageMessages appends configured instructions", () => {
 test("buildCommitMessageRequestBody maps to the DeepSeek chat fields", () => {
   const messages = buildCommitMessageMessages(baseContext);
 
-  assert.deepEqual(buildCommitMessageRequestBody(messages, "deepseek-v4-pro", 400, 0.2), {
-    model: "deepseek-v4-pro",
-    messages,
-    max_tokens: 400,
-    temperature: 0.2,
-    stream: false,
-  });
+  assert.deepEqual(
+    buildCommitMessageRequestBody(messages, "deepseek-v4-pro", 1000),
+    {
+      model: "deepseek-v4-pro",
+      messages,
+      max_tokens: 1000,
+      thinking: { type: "disabled" },
+      stream: false,
+    },
+  );
 });
 
 test("extractChatCompletionText returns the first choice message", () => {
