@@ -51,6 +51,15 @@ export async function generateCommitMessage(dependencies: CommitMessageCommandDe
     return;
   }
 
+  // Untracked files stay out of `git diff`, so a diff-only prompt would be empty here.
+  const changeSet = await readChangeSet(repository);
+  if (changeSet.diff.trim().length === 0) {
+    await vscode.window.showInformationMessage(
+      "DeepSeek Commit found only untracked files. Run git add on them so their contents are part of the diff.",
+    );
+    return;
+  }
+
   const generationError = await vscode.window.withProgress(
     { location: vscode.ProgressLocation.SourceControl, title: "Generating commit message", cancellable: true },
     async (_progress, token): Promise<string | undefined> => {
@@ -58,7 +67,6 @@ export async function generateCommitMessage(dependencies: CommitMessageCommandDe
       const cancellation = token.onCancellationRequested(() => abortController.abort());
 
       try {
-        const changeSet = await readChangeSet(repository);
         const message = await requestMessage(
           {
             apiKey: settings.apiKey,
